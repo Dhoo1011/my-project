@@ -182,7 +182,7 @@ export function ReportModal({ open, onOpenChange }: ReportModalProps) {
                   if (result.successful && result.successful.length > 0) {
                     const newUrls = result.successful.map((file: any) => {
                       const objectPath = filePathMapRef.current.get(file.id);
-                      return objectPath ? `/objects${objectPath}` : file.name;
+                      return objectPath || file.name;
                     });
                     setAttachments(prev => [...prev, ...newUrls]);
                     toast({

@@ -1178,7 +1178,15 @@ export default function Dashboard() {
                     maxNumberOfFiles={1}
                     maxFileSize={10485760}
                     onGetUploadParameters={handleSubmitReportAttachmentUpload}
-                    onComplete={handleSubmitReportAttachmentComplete}
+                    onComplete={(result) => {
+                      if (result.successful && result.successful.length > 0) {
+                        const file = result.successful[0];
+                        // If result contains objectPath, use it; otherwise fallback
+                        const path = (file as any).objectPath || (file as any).xhr?.response?.objectPath || file.name;
+                        setSubmitReportAttachment(path);
+                        toast({ title: "تم رفع المرفق" });
+                      }
+                    }}
                     buttonClassName="bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300"
                   >
                     <Upload className="w-4 h-4 ml-2" />
