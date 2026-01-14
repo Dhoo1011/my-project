@@ -881,28 +881,56 @@ export default function Dashboard() {
                 {reportsLoading ? (
                   <div className="text-center py-10 text-slate-500">جاري التحميل...</div>
                 ) : reports && reports.length > 0 ? (
-                  reports.slice(0, 3).map((report: any) => (
-                    <motion.div
-                      key={report.id}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      className="bg-neutral-900 border border-white/5 rounded-xl p-5 flex items-start gap-4"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                        <AlertCircle className="w-5 h-5 text-blue-500" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex items-center justify-between mb-1">
-                          <div className="flex items-center gap-2">
-                            <h3 className="font-bold">{report.name}</h3>
-                            {getStatusBadge(report.status)}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {reports.slice(0, 3).map((report: any) => (
+                      <motion.div
+                        key={report.id}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="bg-neutral-900 border border-white/5 rounded-xl p-5 flex flex-col gap-4"
+                      >
+                        <div className="flex items-start gap-4">
+                          <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
+                            <AlertCircle className="w-5 h-5 text-blue-500" />
                           </div>
-                          <span className="text-[10px] text-slate-500 font-mono">#{report.id}</span>
+                          <div className="flex-1">
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-bold">{report.name}</h3>
+                                {getStatusBadge(report.status)}
+                              </div>
+                              <span className="text-[10px] text-slate-500 font-mono">#{report.id}</span>
+                            </div>
+                            <p className="text-slate-400 text-sm leading-relaxed">{report.content}</p>
+                          </div>
                         </div>
-                        <p className="text-slate-400 text-sm leading-relaxed">{report.content}</p>
-                      </div>
-                    </motion.div>
-                  ))
+                        {report.attachments && report.attachments.length > 0 && (
+                          <div className="grid grid-cols-3 gap-2">
+                            {report.attachments.map((url: string, i: number) => {
+                              const href = url.startsWith('/objects/') ? url : `/objects/${url}`;
+                              return (
+                                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                                  <img 
+                                    src={href} 
+                                    alt={`Attachment ${i + 1}`}
+                                    className="w-full h-full object-cover"
+                                  />
+                                  <a 
+                                    href={href} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                                  >
+                                    <Eye className="w-4 h-4 text-white" />
+                                  </a>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
                 ) : (
                   <div className="text-center py-10 border border-dashed border-white/10 rounded-xl text-slate-500">
                     لا توجد بلاغات حالياً
@@ -949,20 +977,25 @@ export default function Dashboard() {
                         <p className="text-slate-400 text-sm leading-relaxed mb-3">{report.content}</p>
                         
                         {report.attachments && report.attachments.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mb-3">
+                          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-3">
                             {report.attachments.map((url: string, i: number) => {
                               const href = url.startsWith('/objects/') ? url : `/objects/${url}`;
                               return (
-                                <a 
-                                  key={i} 
-                                  href={href} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-[10px] bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 hover:bg-blue-500/20 transition-colors flex items-center gap-1"
-                                >
-                                  <Paperclip className="w-3 h-3" />
-                                  مرفق {i + 1}
-                                </a>
+                                <div key={i} className="relative group aspect-square rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                                  <img 
+                                    src={href} 
+                                    alt={`Attachment ${i + 1}`}
+                                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                  />
+                                  <a 
+                                    href={href} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                                  >
+                                    <Eye className="w-5 h-5 text-white" />
+                                  </a>
+                                </div>
                               );
                             })}
                           </div>
@@ -1046,15 +1079,21 @@ export default function Dashboard() {
                         
                         {report.attachment && (
                           <div className="mb-3">
-                            <a 
-                              href={report.attachment.startsWith('/objects/') ? report.attachment : `/objects/${report.attachment}`}
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              className="text-[10px] bg-purple-500/10 text-purple-400 px-2 py-1 rounded border border-purple-500/20 hover:bg-purple-500/20 transition-colors inline-flex items-center gap-1"
-                            >
-                              <Paperclip className="w-3 h-3" />
-                              عرض المرفق
-                            </a>
+                            <div className="relative group w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                              <img 
+                                src={report.attachment.startsWith('/objects/') ? report.attachment : `/objects/${report.attachment}`} 
+                                alt="Attachment"
+                                className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                              />
+                              <a 
+                                href={report.attachment.startsWith('/objects/') ? report.attachment : `/objects/${report.attachment}`}
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                              >
+                                <Eye className="w-5 h-5 text-white" />
+                              </a>
+                            </div>
                           </div>
                         )}
 
@@ -1221,13 +1260,23 @@ export default function Dashboard() {
                   >
                     <div className="flex items-center gap-4">
                       {person.imageUrl ? (
-                        <img 
-                          src={person.imageUrl} 
-                          alt={person.name} 
-                          className="w-12 h-12 rounded-full object-cover border-2 border-red-500/30"
-                        />
+                        <div className="relative group w-12 h-12 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                          <img 
+                            src={person.imageUrl.startsWith('/objects/') ? person.imageUrl : `/objects/${person.imageUrl}`} 
+                            alt={person.name} 
+                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                          />
+                          <a 
+                            href={person.imageUrl.startsWith('/objects/') ? person.imageUrl : `/objects/${person.imageUrl}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                          >
+                            <Eye className="w-3 h-3 text-white" />
+                          </a>
+                        </div>
                       ) : (
-                        <div className="w-12 h-12 rounded-full bg-red-500/10 flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-lg bg-red-500/10 flex items-center justify-center">
                           <Users className="w-6 h-6 text-red-500" />
                         </div>
                       )}
@@ -1423,13 +1472,23 @@ export default function Dashboard() {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-4">
                         {person.imageUrl ? (
-                          <img 
-                            src={person.imageUrl} 
-                            alt={person.name} 
-                            className="w-14 h-14 rounded-full object-cover border-2 border-blue-500/30"
-                          />
+                          <div className="relative group w-14 h-14 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                            <img 
+                              src={person.imageUrl.startsWith('/objects/') ? person.imageUrl : `/objects/${person.imageUrl}`} 
+                              alt={person.name} 
+                              className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                            />
+                            <a 
+                              href={person.imageUrl.startsWith('/objects/') ? person.imageUrl : `/objects/${person.imageUrl}`}
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                            >
+                              <Eye className="w-4 h-4 text-white" />
+                            </a>
+                          </div>
                         ) : (
-                          <div className="w-14 h-14 rounded-full bg-blue-500/10 flex items-center justify-center">
+                          <div className="w-14 h-14 rounded-lg bg-blue-500/10 flex items-center justify-center">
                             <Users className="w-7 h-7 text-blue-500" />
                           </div>
                         )}
@@ -1530,12 +1589,21 @@ export default function Dashboard() {
                             )}
                             {record.imageUrl && (
                               <div className="mt-2">
-                                <img 
-                                  src={record.imageUrl} 
-                                  alt="مرفق السجل" 
-                                  className="max-w-[200px] max-h-[150px] rounded-lg object-cover border border-white/10 cursor-pointer hover:opacity-80"
-                                  onClick={() => window.open(record.imageUrl, '_blank')}
-                                />
+                                <div className="relative group w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                                  <img 
+                                    src={record.imageUrl.startsWith('/objects/') ? record.imageUrl : `/objects/${record.imageUrl}`} 
+                                    alt="مرفق السجل" 
+                                    className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                                  />
+                                  <a 
+                                    href={record.imageUrl.startsWith('/objects/') ? record.imageUrl : `/objects/${record.imageUrl}`}
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                                  >
+                                    <Eye className="w-5 h-5 text-white" />
+                                  </a>
+                                </div>
                               </div>
                             )}
                             <p className="text-slate-600 text-xs mt-2">
