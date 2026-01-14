@@ -19,14 +19,6 @@ services:
     runtime: postgres
     ipAllowList: []
     plan: free
-    version: 16
-    initializer: |
-      CREATE TABLE IF NOT EXISTS session (
-        sid varchar PRIMARY KEY,
-        sess json NOT NULL,
-        expire timestamp NOT NULL
-      );
-      CREATE INDEX IF NOT EXISTS IDX_session_expire ON session(expire);
     disk:
       name: postgres-data
       mountPath: /var/lib/postgresql/data
