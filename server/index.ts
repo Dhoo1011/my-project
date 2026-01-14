@@ -1,10 +1,37 @@
 import express, { type Request, Response, NextFunction } from "express";
+import session from "express-session";
+import connectPgSimple from "connect-pg-simple";
 import { registerRoutes } from "./routes";
 import { serveStatic } from "./static";
 import { createServer } from "http";
+import { pool } from "./db";
 
 const app = express();
 const httpServer = createServer(app);
+
+// Trust proxy for Replit deployment
+app.set('trust proxy', 1);
+
+const PgStore = connectPgSimple(session);
+
+// Session middleware with PostgreSQL store
+app.use(session({
+  store: new PgStore({
+    pool: pool,
+    tableName: 'session',
+    createTableIfMissing: true,
+  }),
+  secret: process.env.SESSION_SECRET || 'phantom-rp-secret-key-dev',
+  resave: false,
+  saveUninitialized: false,
+  proxy: true,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    httpOnly: true
+  }
+}));
 
 declare module "http" {
   interface IncomingMessage {

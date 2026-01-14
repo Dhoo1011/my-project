@@ -1,0 +1,85 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { Shield, Users, FileText, AlertTriangle, GraduationCap, Briefcase } from "lucide-react";
+import { motion } from "framer-motion";
+
+export default function PhantomPoliceHQ() {
+  return (
+    <div className="min-h-screen bg-neutral-950 text-gray-100">
+      {/* Hero with animated background */}
+      <section className="relative h-screen overflow-hidden">
+        <video
+          autoPlay
+          loop
+          muted
+          className="absolute inset-0 w-full h-full object-cover opacity-40"
+        >
+          {/* ضع هنا فيديو المركز (لقطة من اليوتيوب بعد تحويلها mp4) */}
+          <source src="/police-hq.mp4" type="video/mp4" />
+        </video>
+        <div className="relative z-10 flex items-center justify-center h-full text-center">
+          <div>
+            <Shield className="mx-auto mb-6 text-blue-500" size={80} />
+            <h1 className="text-5xl font-extrabold mb-4">رئاسة الشرطة</h1>
+            <p className="text-xl text-gray-300">Phantom RP</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Departments Overview */}
+      <section className="py-20 bg-neutral-900">
+        <h2 className="text-4xl font-bold text-center mb-12">أقسام الشرطة</h2>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 px-4">
+          <Department title="الدوريات" icon={<Shield size={40} />} desc="حفظ الأمن والاستجابة للبلاغات." />
+          <Department title="التحقيقات" icon={<FileText size={40} />} desc="متابعة القضايا وجمع الأدلة." />
+          <Department title="المرور" icon={<AlertTriangle size={40} />} desc="تنظيم السير والحوادث." />
+          <Department title="الأكاديمية" icon={<GraduationCap size={40} />} desc="تدريب وتأهيل الأفراد الجدد." />
+          <Department title="الشؤون" icon={<Briefcase size={40} />} desc="الإدارة والملفات والموارد." />
+        </div>
+      </section>
+
+      {/* Public Announcements */}
+      <section className="py-20">
+        <PageHeader title="تعاميم رئاسة الشرطة للمواطنين" />
+        <ContentBox text="هنا يتم نشر جميع البيانات الرسمية والتنبيهات العامة للمواطنين." />
+      </section>
+
+      {/* Internal Announcements */}
+      <section className="py-20 bg-neutral-900">
+        <PageHeader title="تعاميم الشرطة للعساكر" />
+        <ContentBox text="تعليمات داخلية، أوامر، وتنظيمات خاصة برجال الأمن." />
+      </section>
+
+      {/* Wanted List */}
+      <section className="py-20">
+        <PageHeader title="قائمة المطلوبين" />
+        <ContentBox text="قائمة الأشخاص المطلوبين، يمكن تعديلها وتحديثها في أي وقت." />
+      </section>
+
+      <footer className="py-6 text-center text-gray-500">Phantom RP © 2026</footer>
+    </div>
+  );
+}
+
+function Department({ title, icon, desc }) {
+  return (
+    <Card className="bg-black border border-blue-900 rounded-2xl">
+      <CardContent className="p-6 text-center">
+        <div className="text-blue-500 mx-auto mb-4">{icon}</div>
+        <h3 className="text-2xl font-bold mb-2">{title}</h3>
+        <p className="text-gray-400">{desc}</p>
+      </CardContent>
+    </Card>
+  );
+}
+
+function PageHeader({ title }) {
+  return <h2 className="text-3xl font-bold text-center mb-8 text-blue-500">{title}</h2>;
+}
+
+function ContentBox({ text }) {
+  return (
+    <div className="max-w-4xl mx-auto bg-black border border-blue-900 rounded-2xl p-8 text-center text-gray-300">
+      {text}
+    </div>
+  );
+}
