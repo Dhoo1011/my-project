@@ -91,7 +91,7 @@ export const reports = pgTable("reports", {
 });
 
 export const insertReportSchema = createInsertSchema(reports).omit({ id: true, createdAt: true }).extend({
-  discord: z.string().min(1, "حساب الديسكورد مطلوب"),
+  discord: z.string().min(17, "حساب الديسكورد يجب أن يكون 17-19 رقماً").max(19, "حساب الديسكورد يجب أن يكون 17-19 رقماً"),
   attachments: z.array(z.string()).min(1, "يجب رفع ملف واحد على الأقل"),
 });
 

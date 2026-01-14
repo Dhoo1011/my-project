@@ -110,7 +110,12 @@ export function ReportModal({ open, onOpenChange }: ReportModalProps) {
                 <FormItem className="text-right">
                   <FormLabel>معرف الديسكورد (Discord ID) *</FormLabel>
                   <FormControl>
-                    <Input placeholder="مثال: 123456789012345678" className="bg-white/5 border-white/10 text-right" {...field} />
+                    <Input 
+                      placeholder="مثال: 123456789012345678" 
+                      className="bg-white/5 border-white/10 text-right" 
+                      {...field} 
+                      onChange={(e) => field.onChange(e.target.value.replace(/[^0-9]/g, ''))}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -173,7 +178,8 @@ export function ReportModal({ open, onOpenChange }: ReportModalProps) {
                 onComplete={(result) => {
                   if (result.successful && result.successful.length > 0) {
                     const newUrls = result.successful.map((file: any) => {
-                      return filePathMapRef.current.get(file.id) || file.name;
+                      const objectPath = filePathMapRef.current.get(file.id);
+                      return objectPath ? `/objects${objectPath}` : file.name;
                     });
                     setAttachments(prev => [...prev, ...newUrls]);
                     toast({
