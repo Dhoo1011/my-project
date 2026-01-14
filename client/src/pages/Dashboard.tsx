@@ -866,11 +866,12 @@ export default function Dashboard() {
               </Card>
               <Card className="bg-neutral-900 border-white/5">
                 <CardHeader className="flex flex-row items-center justify-between gap-2 pb-2">
-                  <CardTitle className="text-sm font-medium text-slate-400">الإعلانات النشطة</CardTitle>
-                  <Megaphone className="w-4 h-4 text-green-500" />
+                  <CardTitle className="text-sm font-medium text-slate-400">البلاغات الداخلية</CardTitle>
+                  <Shield className="w-4 h-4 text-purple-500" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{announcements?.length || 0}</div>
+                  <div className="text-2xl font-bold">{internalReports?.length || 0}</div>
+                  <p className="text-xs text-slate-500">{internalReports?.filter((r: any) => r.status === "pending").length || 0} قيد الانتظار</p>
                 </CardContent>
               </Card>
             </div>
