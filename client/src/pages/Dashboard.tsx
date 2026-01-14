@@ -1346,9 +1346,27 @@ export default function Dashboard() {
                     className="bg-neutral-900 border border-white/5 rounded-xl p-5 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                        <Car className="w-6 h-6 text-orange-500" />
-                      </div>
+                      {vehicle.imageUrl ? (
+                        <div className="relative group w-12 h-12 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                          <img 
+                            src={vehicle.imageUrl.startsWith('/objects/') ? vehicle.imageUrl : `/objects/${vehicle.imageUrl}`} 
+                            alt={vehicle.plateNumber} 
+                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
+                          />
+                          <a 
+                            href={vehicle.imageUrl.startsWith('/objects/') ? vehicle.imageUrl : `/objects/${vehicle.imageUrl}`}
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"
+                          >
+                            <Eye className="w-3 h-3 text-white" />
+                          </a>
+                        </div>
+                      ) : (
+                        <div className="w-12 h-12 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                          <Car className="w-6 h-6 text-orange-500" />
+                        </div>
+                      )}
                       <div>
                         <div className="flex items-center gap-2">
                           <h3 className="font-bold">{vehicle.plateNumber}</h3>
