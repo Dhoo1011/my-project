@@ -1181,10 +1181,11 @@ export default function Dashboard() {
                     onComplete={(result) => {
                       if (result.successful && result.successful.length > 0) {
                         const file = result.successful[0];
-                        // If result contains objectPath, use it; otherwise fallback
-                        const path = (file as any).objectPath || (file as any).xhr?.response?.objectPath || file.name;
-                        setSubmitReportAttachment(path);
-                        toast({ title: "تم رفع المرفق" });
+                        const objectPath = submitReportAttachmentRef.current.get(file.id);
+                        if (objectPath) {
+                          setSubmitReportAttachment(objectPath);
+                          toast({ title: "تم رفع المرفق" });
+                        }
                       }
                     }}
                     buttonClassName="bg-white/5 border border-white/10 hover:bg-white/10 text-slate-300"
@@ -1193,7 +1194,26 @@ export default function Dashboard() {
                     رفع ملف
                   </ObjectUploader>
                   {submitReportAttachment && (
-                    <Badge variant="outline" className="mt-2">تم رفع المرفق</Badge>
+                    <div className="mt-4">
+                      <div className="relative group w-32 h-32 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                        <img 
+                          src={submitReportAttachment.startsWith('/objects/') ? submitReportAttachment : `/objects/${submitReportAttachment}`} 
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <Button 
+                          size="icon" 
+                          variant="ghost" 
+                          className="absolute top-1 left-1 h-6 w-6 bg-red-500 hover:bg-red-600 rounded-full text-white"
+                          onClick={() => {
+                            setSubmitReportAttachment("");
+                            submitReportAttachmentRef.current.clear();
+                          }}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <Button type="submit" className="w-full" data-testid="button-submit-internal-report">
@@ -2170,13 +2190,16 @@ export default function Dashboard() {
               <label className="text-sm text-slate-400">المرفق * (إجباري)</label>
               <div className="flex items-center gap-3">
                 {newInternalReport.attachment ? (
-                  <div className="flex items-center gap-2 bg-green-500/10 text-green-400 px-3 py-2 rounded border border-green-500/20">
-                    <Paperclip className="w-4 h-4" />
-                    <span className="text-sm">تم رفع المرفق</span>
+                  <div className="relative group w-20 h-20 rounded-lg overflow-hidden border border-white/10 bg-white/5">
+                    <img 
+                      src={newInternalReport.attachment.startsWith('/objects/') ? newInternalReport.attachment : `/objects/${newInternalReport.attachment}`} 
+                      alt="Preview"
+                      className="w-full h-full object-cover"
+                    />
                     <Button 
                       size="icon" 
                       variant="ghost" 
-                      className="h-5 w-5 text-red-400 hover:text-red-300"
+                      className="absolute top-1 left-1 h-5 w-5 bg-red-500 hover:bg-red-600 rounded-full text-white"
                       onClick={() => {
                         setNewInternalReport(prev => ({ ...prev, attachment: "" }));
                         internalReportAttachmentRef.current.clear();
@@ -2186,9 +2209,8 @@ export default function Dashboard() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2 bg-red-500/10 text-red-400 px-3 py-2 rounded border border-red-500/20">
-                    <AlertCircle className="w-4 h-4" />
-                    <span className="text-sm">لم يتم رفع مرفق</span>
+                  <div className="w-20 h-20 rounded-lg bg-white/5 border border-dashed border-white/20 flex items-center justify-center">
+                    <Paperclip className="w-6 h-6 text-slate-500" />
                   </div>
                 )}
                 <ObjectUploader
