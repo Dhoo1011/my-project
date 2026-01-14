@@ -16,10 +16,4 @@ services:
 
   - type: pserv
     name: phantom-rp-db
-    runtime: postgres
-    ipAllowList: []
     plan: free
-    disk:
-      name: postgres-data
-      mountPath: /var/lib/postgresql/data
-      sizeGB: 1
