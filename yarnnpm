@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# Wrapper to support an accidental build command like "yarnnpm install"
+# Forwards args to npm so "yarnnpm install" -> "npm install"
+set -e
+if [ "$#" -eq 0 ]; then
+  npm install
+else
+  npm "$@"
+fi
