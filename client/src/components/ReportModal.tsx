@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { insertReportSchema } from "@shared/schema";
 import { useCreateReport } from "@/hooks/use-police-data";
 import {
@@ -38,7 +39,9 @@ export function ReportModal({ open, onOpenChange }: ReportModalProps) {
   const filePathMapRef = useRef<Map<string, string>>(new Map());
   
   const form = useForm({
-    resolver: zodResolver(insertReportSchema.omit({ attachments: true })),
+    resolver: zodResolver(insertReportSchema.omit({ attachments: true }).extend({
+      discord: z.string().min(17, "حساب الديسكورد يجب أن يكون 17-19 رقماً").max(19, "حساب الديسكورد يجب أن يكون 17-19 رقماً"),
+    })),
     defaultValues: {
       name: "",
       discord: "",
