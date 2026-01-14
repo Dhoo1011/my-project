@@ -801,6 +801,17 @@ export default function Dashboard() {
               المستخدمين
             </Button>
           )}
+          <Button 
+            variant="ghost" 
+            asChild
+            className="w-full justify-start gap-3 text-slate-400 hover:text-white"
+            data-testid="button-tab-fto"
+          >
+            <a href="https://rank-tracker--phantom-lspd.replit.app/login" target="_blank" rel="noopener noreferrer">
+              <Globe className="w-4 h-4" />
+              نظام F.T.O
+            </a>
+          </Button>
         </nav>
 
         <Button 
